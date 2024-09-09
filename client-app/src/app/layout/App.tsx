@@ -26,12 +26,21 @@ function App() {
     }
 
     function handleFormOpen(id?: string) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         id ? handleSelectActivity(id) : handleCancelSelectActivity();
         setEditMode(true);
     }
 
     function handleFormClose() {
         setEditMode(false);
+    }
+
+    function handleCreateOrEditActivity(activity: Activity) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        activity.id ? setActivities([...activities.filter(x => x.id !== activity.id), activity])
+            : setActivities([...activities, activity]);
+        setEditMode(false);
+        setSelectedActivity(activity);
     }
 
     return (
@@ -46,6 +55,7 @@ function App() {
                     editMode={editMode}
                     openForm={handleFormOpen}
                     closeForm={handleFormClose}
+                    createOrEdit={handleCreateOrEditActivity}
                 />
             </Container>
         </>
