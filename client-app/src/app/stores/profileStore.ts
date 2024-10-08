@@ -2,6 +2,7 @@
 import { Photo, Profile } from "../models/profile";
 import agent from "../api/agent";
 import { store } from "./store";
+import { th } from "date-fns/locale";
 
 export default class ProfileStore {
     profile: Profile | null = null;
@@ -71,6 +72,22 @@ export default class ProfileStore {
         } catch (error) {
             runInAction(() => this.loading = false);
             console.log(error);
+        }
+    }
+
+    deletePhoto = async (photo: Photo) => {
+        this.loading = true;
+        try {
+            await agent.Profiles.deletePhoto(photo.id);
+            runInAction(() => {
+                if (this.profile) {
+                    this.profile.photos = this.profile.photos?.filter(p => p.id !== photo.id);
+                    this.loading = false;
+                }
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loading = false);
         }
     }
 }
