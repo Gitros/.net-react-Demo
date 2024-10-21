@@ -12,7 +12,7 @@ namespace Application.Profiles
         public class Query : IRequest<Result<List<UserActivityDto>>>
         {
             public string Username { get; set; }
-            public string? Predicate { get; set; }
+            public string Predicate { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, Result<List<UserActivityDto>>>
@@ -33,6 +33,7 @@ namespace Application.Profiles
                     .OrderBy(x => x.Activity.Date)
                     .ProjectTo<UserActivityDto>(_mapper.ConfigurationProvider)
                     .AsQueryable();
+
                 query = request.Predicate switch
                 {
                     "past" => query.Where(a => a.Date <= DateTime.Now),
